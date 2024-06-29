@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 fonttools = "^4.53.0"
+findsystemfontsfilename = "^0.3.0"
 
 
 [build-system]
