@@ -1,0 +1,16 @@
+[tool.poetry]
+package-mode = false
+name = "letmidier"
+version = "0.1.0"
+description = "Text to Midi"
+authors = ["fffena <132272963+fffena@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fonttools = "^4.53.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
