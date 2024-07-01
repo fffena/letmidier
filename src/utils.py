@@ -6,7 +6,7 @@ from find_system_fonts_filename import (
 import exceptions as exp
 
 
-def get_system_font():
+def get_installed_font():
     try:
         fonts = get_system_fonts_filename()
     except FindSystemFontsFilenameException:

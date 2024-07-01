@@ -24,7 +24,7 @@ class Cli:
             help="文字の作成で使用されるフォント。URLを入力することもできます。",
         )
         try:
-            font_arg.default = utils.get_system_font().pop()
+            font_arg.default = utils.get_installed_font().pop()
         except exp.CannotFindSystemFont:
             self.err = exp.CannotFindSystemFont(
                 "システムのデフォルトフォントを探すことができませんでした。-fオプションでフォントを直接指定してください。"
