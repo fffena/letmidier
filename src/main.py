@@ -33,7 +33,10 @@ class Cli:
     def run_cmd(self):
         if self.err:
             raise self.err
-        return self.args.func(self.args)
+        if hasattr(self.args, "func"):
+            return self.args.func(self.args)
+        else:
+            self.parser.print_help()
 
     def create_midi(self, args):
         font = TTFont(args.font_name)
