@@ -47,7 +47,7 @@ class Cli:
         cmap = font.getBestCmap()
         glyphes = font.getGlyphSet()
 
-        tg_glyph = glyphes[cmap[ord(args.text)]]
+        tg_glyphs = [glyphes[cmap.get(ord(i))] for i in args.text]
         print("Hello, World!", args.text)
 
 
