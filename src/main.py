@@ -19,16 +19,10 @@ class Cli:
         create_midi = subparsers.add_parser("create")
         create_midi.set_defaults(func=self.create_midi)
         create_midi.add_argument("text", help="入力するテキスト")
-        font_arg = create_midi.add_argument(
+        create_midi.add_argument(
             "-f", "--font-name",
             help="文字の作成で使用されるフォント。URLを入力することもできます。",
         )
-        try:
-            font_arg.default = utils.get_installed_font().pop()
-        except exp.CannotFindSystemFont:
-            self.err = exp.CannotFindSystemFont(
-                "システムのデフォルトフォントを探すことができませんでした。-fオプションでフォントを直接指定してください。"
-            )
 
     def run_cmd(self):
         if self.err:
@@ -39,7 +33,17 @@ class Cli:
             self.parser.print_help()
 
     def create_midi(self, args):
-        font = TTFont(args.font_name)
+        try:
+            if args.font_name is None:
+                font = utils.get_installed_font().pop()
+            else:
+                font = args.font_name
+        except exp.CannotFindSystemFont:
+            raise exp.CannotFindSystemFont(
+                "システムのデフォルトフォントを探すことができませんでした。-fオプションでフォントを直接指定してください。"
+            )
+
+        font = TTFont(font)
         cmap = font.getBestCmap()
         glyphes = font.getGlyphSet()
 
