@@ -1,6 +1,8 @@
 import argparse
+from textwrap import dedent
 from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import RecordingPen
+from fontTools.pens.svgPathPen import SVGPathPen
 
 import exceptions as exp
 import utils
@@ -46,8 +48,30 @@ class Cli:
         font = TTFont(font)
         cmap = font.getBestCmap()
         glyphes = font.getGlyphSet()
+        ascender: int = font["hhea"].ascender  # type: ignore
+        descender: int = font["hhea"].descender  # minus value
 
         tg_glyphs = [glyphes[cmap.get(ord(i))] for i in args.text]
+        aiueo = []
+        for i in tg_glyphs:
+            pen = RecordingPen()
+            svgpen = SVGPathPen(glyphes)
+            i.draw(pen)
+            i.draw(svgpen)
+            aiueo.append((i.width, i.height))
+            with open(f"../aseets/{i.name}.svg", "w") as f:
+                svg = dedent(f"""
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, {i.width}, {i.height}">
+                    <g transform="translate(0, {ascender+descender}) scale(1, -1)">
+                        <path d="{svgpen.getCommands()}" />
+                    </g>
+                </svg>
+                """).strip("\n")
+                f.write(svg)
+            original = utils.svg2pil(svg)
+            resized = original.resize((50, round(original.height * 50 / original.width)))
+            resized.save(f"../aseets/{i.name}.png")
+        print(aiueo)
         print("Hello, World!", args.text)
 
 
