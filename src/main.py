@@ -69,7 +69,7 @@ class Cli:
                 """).strip("\n")
                 f.write(svg)
             original = utils.svg2pil(svg)
-            resized = original.resize((50, round(original.height * 50 / original.width)))
+            resized = original.resize((round(original.width * 100 / original.height), 100))
             resized.save(f"../aseets/{i.name}.png")
         print(aiueo)
         print("Hello, World!", args.text)
