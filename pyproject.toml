@@ -13,6 +13,7 @@ findsystemfontsfilename = "^0.3.0"
 pillow = "^10.4.0"
 svglib = "^1.5.1"
 rlpycairo = "^0.3.0"
+numpy = "^2.0.0"
 
 
 [build-system]
