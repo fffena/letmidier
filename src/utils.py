@@ -21,5 +21,5 @@ def get_installed_font():
 
 def svg2pil(svg: str, dpi: int = 72):
     dist = BytesIO()
-    svg2png(bytestring=svg, dpi=dpi, write_to=dist)
+    svg2png(bytestring=svg, background_color="white", dpi=dpi, write_to=dist)
     return Image.open(dist)
