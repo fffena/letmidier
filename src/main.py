@@ -59,7 +59,7 @@ class Cli:
             i.draw(pen)
             i.draw(svgpen)
             aiueo.append((i.width, i.height))
-            with open(f"../aseets/{i.name}.svg", "w") as f:
+            with open(f"../assets/{i.name}.svg", "w") as f:
                 svg = dedent(f"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, {i.width}, {i.height}">
                     <g transform="translate(0, {ascender+descender}) scale(1, -1)">
@@ -70,7 +70,7 @@ class Cli:
                 f.write(svg)
             original = utils.svg2pil(svg)
             resized = original.resize((round(original.width * 100 / original.height), 100))
-            resized.save(f"../aseets/{i.name}.png")
+            resized.save(f"../assets/{i.name}.png")
         print(aiueo)
         print("Hello, World!", args.text)
 
