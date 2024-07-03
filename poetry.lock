@@ -295,6 +295,33 @@ htmlsoup = ["BeautifulSoup4"]
 source = ["Cython (>=3.0.10)"]
 
 [[package]]
+name = "mido"
+version = "1.3.2"
+description = "MIDI Objects for Python"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "mido-1.3.2-py3-none-any.whl", hash = "sha256:9f5668d2eae78e43d54f4c651f8bf41a614eb23f98ce5179d3ddd984bf19eb58"},
+    {file = "mido-1.3.2.tar.gz", hash = "sha256:3aea28b6ed730f737d5b12da3578debe9dc50058fa370fe9ceded9189b67c348"},
+]
+
+[package.dependencies]
+packaging = ">=23.1,<24.0"
+
+[package.extras]
+build-docs = ["sphinx (>=4.3.2,<4.4.0)", "sphinx-rtd-theme (>=1.2.2,<1.3.0)"]
+check-manifest = ["check-manifest (>=0.49)"]
+dev = ["mido[build-docs]", "mido[check-manifest]", "mido[lint-code]", "mido[lint-reuse]", "mido[release]", "mido[test-code]"]
+lint-code = ["ruff (>=0.1.6,<0.2.0)"]
+lint-reuse = ["reuse (>=1.1.2,<1.2.0)"]
+ports-all = ["mido[ports-pygame]", "mido[ports-rtmidi-python]", "mido[ports-rtmidi]"]
+ports-pygame = ["PyGame (>=2.5,<3.0)"]
+ports-rtmidi = ["python-rtmidi (>=1.5.4,<1.6.0)"]
+ports-rtmidi-python = ["rtmidi-python (>=0.2.2,<0.3.0)"]
+release = ["twine (>=4.0.2,<4.1.0)"]
+test-code = ["pytest (>=7.4.0,<7.5.0)"]
+
+[[package]]
 name = "numpy"
 version = "2.0.0"
 description = "Fundamental package for array computing in Python"
@@ -346,6 +373,17 @@ files = [
     {file = "numpy-2.0.0-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:38ecb5b0582cd125f67a629072fed6f83562d9dd04d7e03256c9829bdec027ad"},
     {file = "numpy-2.0.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:cef04d068f5fb0518a77857953193b6bb94809a806bd0a14983a8f12ada060c9"},
     {file = "numpy-2.0.0.tar.gz", hash = "sha256:cf5d1c9e6837f8af9f92b6bd3e86d513cdc11f60fd62185cc49ec7d1aba34864"},
+]
+
+[[package]]
+name = "packaging"
+version = "23.2"
+description = "Core utilities for Python packages"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "packaging-23.2-py3-none-any.whl", hash = "sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7"},
+    {file = "packaging-23.2.tar.gz", hash = "sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5"},
 ]
 
 [[package]]
@@ -551,4 +589,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "87e17ff106d52879a257658299cde93da2053ac73f8021f9c176715260ea495c"
+content-hash = "90e4827095825ab41fe64eaf36f7fdb6bde2aaee452419b062885fa4d50a3352"
