@@ -1,11 +1,11 @@
 from io import BytesIO
 
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPM
+from cairosvg import svg2png
 from find_system_fonts_filename import (
     get_system_fonts_filename,
     FindSystemFontsFilenameException,
 )
+from PIL import Image
 
 import exceptions as exp
 
@@ -20,5 +20,6 @@ def get_installed_font():
 
 
 def svg2pil(svg: str, dpi: int = 72):
-    draw_data = svg2rlg(BytesIO(svg.encode()))
-    return renderPM.drawToPIL(draw_data, dpi=dpi)
+    dist = BytesIO()
+    svg2png(bytestring=svg, dpi=dpi, write_to=dist)
+    return Image.open(dist)
