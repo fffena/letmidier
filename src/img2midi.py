@@ -3,7 +3,20 @@ import mido
 from mido import Message, MidiFile
 from PIL import Image
 
-import uuid
+
+def count_same(array):
+    results = []
+    for row in array.copy():
+        boundaries = np.flatnonzero(row[:-1] != row[1:]) + 1
+
+        starts = np.concatenate([[0], boundaries])
+        ends = np.concatenate([boundaries, [len(row)]])
+        lengths = ends - starts
+        values = row[starts]
+
+        result = [(values[i], lengths[i]) for i in range(len(lengths))]
+        results.append(result)
+    return results
 
 
 def pil_to_midi(src: Image.Image, output_midi_file):
@@ -17,8 +30,13 @@ def pil_to_midi(src: Image.Image, output_midi_file):
 
     print(len(img_array), len(img_array[0]))
     offset = 60
-    for height_offset, i in enumerate(img_array):
+    for height_offset, i in enumerate(count_same(img_array)):
+        print(i)
         for imdata in i:
-            track.append(Message("note_on", note=64+height_offset, velocity=100, time=offset+0))
-    print(img_array)
+            pass
+            # track.append(
+            #     Message(
+            #         "note_on", note=64 + height_offset, velocity=100, time=offset + 0
+            #     )
+            # )
     # WIP
