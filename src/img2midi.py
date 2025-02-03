@@ -65,7 +65,6 @@ def video_to_midi(video_fp: str | PurePath, a):
         raise FileNotFoundError(f"Video file not found: {video_fp}")
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     pg_bar = tqdm.tqdm(total=total_frames)
-    pg_bar.close()
 
     midi = MidiFile()
     track = mido.MidiTrack()
@@ -74,6 +73,7 @@ def video_to_midi(video_fp: str | PurePath, a):
 
     space = 120
     pitch_offset = 120
+    frame_length = 540 + space
     now_t = 0
     while True:
         ret, frame = cap.read()
@@ -105,25 +105,26 @@ def video_to_midi(video_fp: str | PurePath, a):
         info.sort(key=lambda x: x[2])
 
         base_t = 0
-        print(info[:5])
         for ind, (opcode, note, t) in enumerate(info):
             time = math.floor(t * a - base_t)
-            shift = now_t % (540 + space)
+            shift = frame_length - (now_t % frame_length)
             if ind == 0:
                 time += space
-                time += shift
+                base_t -= space
+                if shift != frame_length:
+                    # print("inv", shift)
+                    time += shift
+                    base_t -= shift
             msg_type = "note_on" if opcode == 0 else "note_off"
             track.append(Message(msg_type, note=note, velocity=100, time=time))
-            if ind == 0:
-                base_t += time - space - shift
-            else:
-                base_t += time
+
+            base_t += time
             now_t += time
 
         pg_bar.n = frame_count
-        # pg_bar.refresh()
+        pg_bar.refresh()
     pg_bar.close()
-    midi.save(f"assets/badapple22-{a}.mid")
+    midi.save(f"assets/badapplelatest22-{a}.mid")
 
 
 if __name__ == "__main__":
