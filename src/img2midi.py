@@ -48,6 +48,7 @@ def pil_to_midi(src: Image.Image, output_midi_file):
                 info.append((1, o, now + im_data[1]))
             now += im_data[1]
     info.sort(key=lambda x: x[2])
+    print(info)
     base_time = 0
     for opcode, note, t in info:
         time = t * 15 - base_time
@@ -57,12 +58,12 @@ def pil_to_midi(src: Image.Image, output_midi_file):
     midi.save(output_midi_file)
 
 
-def video_to_midi(video_fp: str | PurePath, a):
+def video_to_midi(video_fp: str | PurePath, output_fp: str | PurePath, a):
     if isinstance(video_fp, PurePath):
         video_fp = str(video_fp)
     cap = cv2.VideoCapture(video_fp)
     if not cap.isOpened():
-        raise FileNotFoundError(f"Video file not found: {video_fp}")
+        raise FileNotFoundError(f"Video file cannot be found: {video_fp}")
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     pg_bar = tqdm.tqdm(total=total_frames)
 
@@ -79,11 +80,10 @@ def video_to_midi(video_fp: str | PurePath, a):
         ret, frame = cap.read()
         if not ret:
             break
-        # if cap.get(cv2.CAP_PROP_POS_FRAMES) == 1000:
-        #     break
-        if cap.get(cv2.CAP_PROP_POS_FRAMES) % 2:
-            continue
+        # if cap.get(cv2.CAP_PROP_POS_FRAMES) % 2:
+        #     continue
 
+        # サイズ調整などの加工
         h, w = frame.shape[:2]
         frame = cv2.resize(frame, dsize=(round(w * (44 / h)), 44))
         frame_count = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
@@ -111,8 +111,9 @@ def video_to_midi(video_fp: str | PurePath, a):
             if ind == 0:
                 time += space
                 base_t -= space
+
+                # ズレの修正
                 if shift != frame_length:
-                    # print("inv", shift)
                     time += shift
                     base_t -= shift
             msg_type = "note_on" if opcode == 0 else "note_off"
@@ -124,14 +125,4 @@ def video_to_midi(video_fp: str | PurePath, a):
         pg_bar.n = frame_count
         pg_bar.refresh()
     pg_bar.close()
-    midi.save(f"assets/badapplelatest22-{a}.mid")
-
-
-if __name__ == "__main__":
-    a = Image.open("assets/badapple/a.jpg")
-    a = a.resize((round(a.width * 44 / a.height), 44))
-    # a = a.resize((127, round(a.height * 127 / a.width)))
-    a.save("assets/badapple/a2.jpg")
-    pil_to_midi(a, "assets/test.mid")
-    video_to_midi("assets/badapple/badapple.mp4", 9.166)
-    print("finished")
+    midi.save(output_fp)

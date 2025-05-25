@@ -1,23 +1,31 @@
-[tool.poetry]
-package-mode = false
+[project]
 name = "letmidier"
 version = "0.1.0"
-description = "Text to Midi"
-authors = ["fffena <132272963+fffena@users.noreply.github.com>"]
+description = "Convert video to MIDI files"
 readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cairosvg>=2.7.1",
+    "easyocr>=1.7.2",
+    "ffmpy>=0.5.0",
+    "findsystemfontsfilename>=0.3.2",
+    "fonttools>=4.57.0",
+    "mido>=1.3.3",
+    "numpy>=2.2.4",
+    "opencv-python>=4.11.0.86",
+    "pillow>=11.1.0",
+    "torch>=2.7.0",
+    "torchaudio>=2.7.0",
+    "torchvision>=0.22.0",
+    "tqdm>=4.67.1",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-fonttools = "^4.53.0"
-findsystemfontsfilename = "^0.3.0"
-pillow = "^10.4.0"
-numpy = "^2.0.0"
-mido = "^1.3.2"
-cairosvg = "^2.7.1"
-opencv-python = "^4.10.0.84"
-tqdm = "^4.67.1"
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
 
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }

@@ -1,8 +1,9 @@
 import argparse
 from textwrap import dedent
-from fontTools.ttLib import TTFont
+
 from fontTools.pens.recordingPen import RecordingPen
 from fontTools.pens.svgPathPen import SVGPathPen
+from fontTools.ttLib import TTFont
 
 import exceptions as exp
 import utils
@@ -11,7 +12,6 @@ import utils
 class Cli:
     def __init__(self) -> None:
         self.parser = argparse.ArgumentParser()
-        self.err = None
         self._define_args()
         self.args = self.parser.parse_args()
 
@@ -27,8 +27,6 @@ class Cli:
         )
 
     def run_cmd(self):
-        if self.err:
-            raise self.err
         if hasattr(self.args, "func"):
             return self.args.func(self.args)
         else:
@@ -47,23 +45,25 @@ class Cli:
 
         font = TTFont(font)
         cmap = font.getBestCmap()
-        glyphes = font.getGlyphSet()
+        glyphs = font.getGlyphSet()
         ascender: int = font["hhea"].ascender  # type: ignore
         descender: int = font["hhea"].descender  # minus value
+        line_gap = font["hhea"].lineGap
 
-        tg_glyphs = [glyphes[cmap.get(ord(i))] for i in args.text]
+        tg_glyphs = [glyphs[cmap.get(ord(i))] for i in args.text]
         aiueo = []
         for i in tg_glyphs:
             pen = RecordingPen()
-            svgpen = SVGPathPen(glyphes)
+            svg_pen = SVGPathPen(glyphs)
             i.draw(pen)
-            i.draw(svgpen)
-            aiueo.append((i.width, i.height))
+            i.draw(svg_pen)
+            height = i.height or ascender - descender
+            aiueo.append((i.width, height))
             with open(f"../assets/{i.name}.svg", "w") as f:
                 svg = dedent(f"""
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, {i.width}, {i.height}">
-                    <g transform="translate(0, {ascender+descender}) scale(1, -1)">
-                        <path d="{svgpen.getCommands()}" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0, 0, {i.width}, {height}">
+                    <g transform="translate(0, {height-line_gap-21}) scale(1, -1)">
+                        <path d="{svg_pen.getCommands()}" />
                     </g>
                 </svg>
                 """).strip("\n")

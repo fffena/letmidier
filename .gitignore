@@ -3,3 +3,7 @@
 
 __pycache__/
 assets
+!assets/.gitkeep
+a.py
+/*.png
+/*.jpg
